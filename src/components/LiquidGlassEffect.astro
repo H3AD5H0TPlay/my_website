@@ -1,0 +1,70 @@
+---
+---
+
+<div class="liquid-glass fixed inset-0 pointer-events-none">
+  <!-- Animated gradient background -->
+  <div class="absolute inset-0 bg-gradient-radial from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+  
+  <!-- Liquid effect -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="liquid-bubble"></div>
+    <div class="liquid-bubble"></div>
+    <div class="liquid-bubble"></div>
+  </div>
+  
+  <!-- Glass overlay -->
+  <div class="absolute inset-0 backdrop-blur-[2px]"></div>
+</div>
+
+<style>
+  .liquid-glass {
+    z-index: 0;
+  }
+
+  .liquid-bubble {
+    position: absolute;
+    background: linear-gradient(45deg, rgba(255,23,68,0.1), rgba(255,23,68,0.05));
+    border-radius: 50%;
+    filter: blur(10px);
+    animation: float 20s infinite;
+  }
+
+  .liquid-bubble:nth-child(1) {
+    width: 300px;
+    height: 300px;
+    left: 20%;
+    top: 20%;
+    animation-delay: 0s;
+  }
+
+  .liquid-bubble:nth-child(2) {
+    width: 250px;
+    height: 250px;
+    left: 60%;
+    top: 40%;
+    animation-delay: -7s;
+  }
+
+  .liquid-bubble:nth-child(3) {
+    width: 200px;
+    height: 200px;
+    left: 40%;
+    top: 60%;
+    animation-delay: -14s;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(50px, 50px) scale(1.1);
+    }
+    50% {
+      transform: translate(0, 100px) scale(0.9);
+    }
+    75% {
+      transform: translate(-50px, 50px) scale(1.05);
+    }
+  }
+</style>
