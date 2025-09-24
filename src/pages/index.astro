@@ -53,11 +53,12 @@ import { translations } from '../utils/translations';
               <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm">Welcome to my corner of the digital world! I'm a passionate software developer with 5+ years of experience in web development, specializing in building modern web applications. My expertise spans across the full stack, from crafting intuitive user interfaces to designing robust backend systems.</p>
               <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm">Throughout my career, I've had the opportunity to work with diverse technologies and lead multiple successful projects. I thrive on solving complex technical challenges and continuously exploring new technologies to create innovative solutions that make a real impact.</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                <div class="relative bg-black/80 backdrop-blur-sm p-6 border border-cyber-red/20 rounded-xl group">
+                <div class="relative bg-black/80 backdrop-blur-sm p-6 rounded-xl group">
                   <div class="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
                   <div class="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
                   <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
-                  <h3 class="text-cyber-red text-xl font-bold mb-3">Experience</h3>
+                  <div class="cyber-border"></div>
+                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative">Experience</h3>
                   <ul class="space-y-2 text-white/80">
                     <li class="flex items-center gap-2">
                       <span class="text-cyber-red/60">></span>
@@ -73,11 +74,12 @@ import { translations } from '../utils/translations';
                     </li>
                   </ul>
                 </div>
-                <div class="relative bg-black/80 backdrop-blur-sm p-6 border border-cyber-red/20 rounded-xl group">
+                <div class="relative bg-black/80 backdrop-blur-sm p-6 rounded-xl group">
                   <div class="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
                   <div class="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
                   <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
-                  <h3 class="text-cyber-red text-xl font-bold mb-3">Education</h3>
+                  <div class="cyber-border"></div>
+                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative">Education</h3>
                   <ul class="space-y-2 text-white/80">
                     <li class="flex items-center gap-2">
                       <span class="text-cyber-red/60">></span>
@@ -147,10 +149,11 @@ import { translations } from '../utils/translations';
                 tech: ["Vue.js", "Node.js", "MongoDB", "Express", "Docker", "GCP"]
               }
             ].map((job, index) => (
-              <div class="relative bg-black/80 backdrop-blur-sm p-8 border border-cyber-red/20 rounded-xl group">
+              <div class="relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group">
                 <div class="absolute top-0 right-0 w-20 h-20 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
                 <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
                 <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+                <div class="cyber-border"></div>
                 <div class="kanji-overlay"></div>
                 <div class="space-y-6 relative">
                   <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
@@ -188,16 +191,19 @@ import { translations } from '../utils/translations';
   </section>  <!-- Skills Section -->
   <section id="skills" class="py-20 bg-cyber-darker/50 japanese-pattern">
     <div class="container mx-auto px-4">
-      <SectionHeader
-        title={translations.skills.title}
-        subtitle={translations.skills.subtitle}
-      />
+      <div class="text-center mb-12">
+        <SectionHeader
+          title={translations.skills.title}
+          subtitle={translations.skills.subtitle}
+        />
+      </div>
       <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 2xl:grid-cols-8 gap-4 xs:gap-6">
         {['TypeScript', 'React', 'Node.js', 'Python', 'SQL', 'AWS', 'Docker', 'Git'].map((skill) => (
-          <div class="relative bg-black/80 backdrop-blur-sm p-4 border border-cyber-red/20 rounded-xl group text-center">
+          <div class="relative bg-black/80 backdrop-blur-sm p-4 rounded-xl group text-center">
             <div class="absolute top-0 right-0 w-12 h-12 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
             <div class="absolute bottom-0 left-0 w-12 h-12 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
             <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+            <div class="cyber-border"></div>
             <span class="text-lg font-cyber text-cyber-red glitch-hover inline-block relative z-10">{skill}</span>
           </div>
         ))}

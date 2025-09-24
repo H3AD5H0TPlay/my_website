@@ -11,10 +11,11 @@ interface Props {
 const { title, description, tags, link } = Astro.props;
 ---
 
-<div class="relative bg-black/80 backdrop-blur-sm p-6 border border-cyber-red/20 rounded-xl group">
-  <div class="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
+<div class="relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group">
+  <div class="absolute top-0 right-0 w-20 h-20 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
+  <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
   <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+  <div class="kanji-overlay"></div>
   <div class="relative z-10">
     <h3 class="text-xl font-cyber font-bold mb-3 text-cyber-red group-hover:text-cyber-red-bright transition-colors">{title}</h3>
     <p class="text-white/80 mb-4 font-cyber">{description}</p>

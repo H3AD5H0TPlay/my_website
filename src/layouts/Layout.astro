@@ -97,48 +97,76 @@ const { title, description = defaultDescription } = Astro.props;
 
       .cyber-box {
         position: relative;
-        border: 1px solid rgba(255, 23, 68, 0.3);
         background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
         transition: all 0.3s ease;
-        overflow: hidden;
-      }
-
-      .cyber-box::before, .cyber-box::after {
-        content: '';
-        position: absolute;
-        width: 150px;
-        height: 150px;
-        border: 4px solid rgba(255, 23, 68, 0.5);
+        border-radius: 0.75rem;
       }
 
       .cyber-box::before {
-        top: -75px;
-        right: -75px;
-        border-width: 4px 4px 0 0;
-        animation: rotateCornerDecoration 8s linear infinite;
-        transform-origin: 0 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 5rem;
+        height: 5rem;
+        border-top: 3px solid rgba(255, 23, 68, 0.4);
+        border-right: 3px solid rgba(255, 23, 68, 0.4);
+        border-top-right-radius: 0.75rem;
       }
 
       .cyber-box::after {
-        bottom: -75px;
-        left: -75px;
-        border-width: 0 0 4px 4px;
-        animation: rotateCornerDecoration 8s linear infinite;
-        transform-origin: 100% 0;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 5rem;
+        height: 5rem;
+        border-bottom: 3px solid rgba(255, 23, 68, 0.4);
+        border-left: 3px solid rgba(255, 23, 68, 0.4);
+        border-bottom-left-radius: 0.75rem;
       }
 
-      .cyber-box:hover {
+      .cyber-box .kanji-overlay {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+      }
+
+      .cyber-box:hover::before,
+      .cyber-box:hover::after {
         border-color: rgba(255, 23, 68, 0.6);
-        box-shadow: 0 0 30px rgba(255, 23, 68, 0.2);
-      }
-
-      .cyber-box:hover::before, .cyber-box:hover::after {
-        border-color: rgba(255, 23, 68, 0.8);
       }
 
       .glitch-hover:hover {
         animation: glitch 1s linear infinite;
+      }
+
+      @keyframes rotateBorder {
+        0% {
+          clip-path: polygon(0 0, 100% 0, 100% 3px, 3px 3px, 3px 100%, 0 100%);
+        }
+        25% {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 3px) 100%, calc(100% - 3px) 3px, 0 3px);
+        }
+        50% {
+          clip-path: polygon(0 calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 0 100%);
+        }
+        75% {
+          clip-path: polygon(0 0, 3px 0, 3px calc(100% - 3px), 100% calc(100% - 3px), 100% 100%, 0 100%);
+        }
+        100% {
+          clip-path: polygon(0 0, 100% 0, 100% 3px, 3px 3px, 3px 100%, 0 100%);
+        }
+      }
+
+      .cyber-border {
+        position: absolute;
+        inset: 0;
+        border: 3px solid rgba(255, 23, 68, 0.4);
+        border-radius: inherit;
+        animation: rotateBorder 4s linear infinite;
+        pointer-events: none;
       }
 
       .japanese-pattern {

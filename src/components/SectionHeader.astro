@@ -8,12 +8,12 @@ const { title, subtitle } = Astro.props;
 ---
 
 <div class="mb-16 text-center relative">
-  <h2 class="text-4xl font-cyber font-bold mb-3 text-cyber-red relative inline-block">
+  <h2 class="text-4xl font-cyber font-bold mb-4 text-cyber-red relative block">
     <span class="relative z-10">{title}</span>
     <div class="absolute inset-0 bg-cyber-red/20 blur-xl"></div>
   </h2>
   {subtitle && (
-    <p class="text-white/70 font-cyber text-lg relative inline-block">
+    <p class="text-white/70 font-cyber text-lg relative block mt-2">
       <span class="relative z-10">{subtitle}</span>
       <div class="absolute inset-0 bg-cyber-red/10 blur-lg"></div>
     </p>
