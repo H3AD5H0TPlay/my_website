@@ -12,8 +12,10 @@ const menuItems = [
 <div class="md:hidden">
   <button
     id="menu-toggle"
-    class="fixed top-4 right-4 p-2 text-cyber-red hover:text-cyber-red-bright transition-all duration-300 hover:scale-105 z-50"
+    class="fixed top-4 right-4 p-2 text-cyber-red hover:text-cyber-red-bright transition-all duration-300 hover:scale-105 z-[70]"
     aria-label="Toggle Menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
   >
     <div class="menu-icon w-6 h-6 relative">
       <span class="menu-line absolute h-0.5 w-full bg-current transform transition-all duration-300 origin-center top-0 left-0"></span>
@@ -24,14 +26,14 @@ const menuItems = [
 
   <nav
     id="mobile-menu"
-    class="fixed inset-0 z-40 transform translate-x-full transition-all duration-500 ease-out"
+    class="fixed inset-0 z-[60] transform translate-x-full transition-all duration-500 ease-out"
   >
     <!-- Background layers -->
     <div class="absolute inset-0 bg-black/95"></div>
     <div class="absolute inset-0 backdrop-blur-xl"></div>
     <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/10 via-transparent to-cyber-red/5"></div>
     
-    <div class="relative z-10 h-full flex flex-col pt-20 px-8">
+  <div class="relative z-10 h-full flex flex-col pt-20 px-8">
       <!-- Unified liquid glass menu panel -->
       <div class="relative w-full mt-8 rounded-2xl bg-black/40 backdrop-blur-md overflow-hidden">
         <!-- Liquid glass effects -->
@@ -59,9 +61,9 @@ const menuItems = [
         </ul>
       </div>
     </div>
-      </ul>
-    </div>
   </nav>
+  <!-- Safelist Tailwind classes used via JS -->
+  <span class="hidden opacity-100 translate-x-0"></span>
 </div>
 
 <style>
@@ -82,7 +84,8 @@ const menuItems = [
     transform: rotate(-45deg) translateY(-13px);
   }
 
-  #mobile-menu:not(.translate-x-full) .menu-list-item {
+  /* Reveal menu items when menu is open */
+  #mobile-menu:not(.translate-x-full) .menu-list-item a {
     opacity: 1 !important;
     transform: translateX(0) !important;
   }
@@ -102,43 +105,82 @@ const menuItems = [
 </style>
 
 <script>
-  const menuToggle = document.getElementById('menu-toggle');
-  const menuIcon = menuToggle?.querySelector('.menu-icon');
-  const mobileMenu = document.getElementById('mobile-menu');
+  (function initMobileMenu() {
+    const setup = () => {
+      const menuToggle = document.getElementById('menu-toggle');
+      const menuIcon = menuToggle?.querySelector('.menu-icon');
+      const mobileMenu = document.getElementById('mobile-menu');
   const menuLinks = mobileMenu?.querySelectorAll('a');
 
-  let isAnimating = false;
+      if (!menuToggle || !mobileMenu) return; // Nothing to wire up
 
-  function toggleMenu() {
-    if (isAnimating) return;
-    isAnimating = true;
+      let isAnimating = false;
 
-    const isOpening = mobileMenu?.classList.contains('translate-x-full');
+      /** @param {boolean} visible */
+      function showLinks() {
+        if (!menuLinks) return;
+        menuLinks.forEach((link) => {
+          link.classList.remove('opacity-0', 'translate-x-8');
+          link.classList.add('opacity-100', 'translate-x-0');
+        });
+      }
 
-    // Toggle menu icon first when opening
-    if (isOpening) {
-      menuIcon?.classList.add('active');
-      setTimeout(() => {
-        mobileMenu?.classList.remove('translate-x-full');
-        document.body.classList.add('overflow-hidden');
-      }, 50);
+      function hideLinks() {
+        if (!menuLinks) return;
+        menuLinks.forEach((link) => {
+          link.classList.add('opacity-0', 'translate-x-8');
+          link.classList.remove('opacity-100', 'translate-x-0');
+        });
+      }
+
+      function toggleMenu() {
+        if (isAnimating || !mobileMenu || !menuToggle) return;
+        isAnimating = true;
+
+        const isOpening = mobileMenu.classList.contains('translate-x-full');
+
+        if (isOpening) {
+          menuIcon?.classList.add('active');
+          setTimeout(() => {
+            mobileMenu.classList.remove('translate-x-full');
+            document.body.classList.add('overflow-hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            // Ensure links become visible
+            showLinks();
+          }, 50);
+        } else {
+          mobileMenu.classList.add('translate-x-full');
+          document.body.classList.remove('overflow-hidden');
+          setTimeout(() => {
+            menuIcon?.classList.remove('active');
+          }, 300);
+          menuToggle.setAttribute('aria-expanded', 'false');
+          // Hide links for next open
+          hideLinks();
+        }
+
+        setTimeout(() => {
+          isAnimating = false;
+        }, 500);
+      }
+
+      menuToggle.addEventListener('click', toggleMenu);
+      menuLinks?.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+      });
+
+      // Close on Escape for accessibility
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+          toggleMenu();
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setup);
     } else {
-      // Close menu first, then animate icon
-      mobileMenu?.classList.add('translate-x-full');
-      document.body.classList.remove('overflow-hidden');
-      setTimeout(() => {
-        menuIcon?.classList.remove('active');
-      }, 300);
+      setup();
     }
-
-    // Reset animation lock
-    setTimeout(() => {
-      isAnimating = false;
-    }, 500);
-  }
-
-  menuToggle?.addEventListener('click', toggleMenu);
-  menuLinks?.forEach(link => {
-    link.addEventListener('click', toggleMenu);
-  });
+  })();
 </script>
