@@ -21,7 +21,7 @@ const defaultTranslations = translations.en;
           <span id="hero-greeting">{defaultTranslations.hero.greeting}</span> <span class="text-cyber-red animate-glow relative">
             <span id="hero-name">Peter Varga</span>
             <div class="absolute inset-0 bg-cyber-red/20 blur-xl"></div>
-          </span>
+          </span><span id="hero-name-suffix">{defaultTranslations.hero.name_suffix}</span>
         </h1>
         <p class="text-lg xs:text-xl sm:text-2xl text-white/80 mb-8 animate-fade-in opacity-0 font-cyber" style="animation: fadeIn 1s ease-out 0.5s forwards">
           <span id="hero-tagline">{defaultTranslations.hero.tagline}</span>
@@ -254,12 +254,14 @@ const defaultTranslations = translations.en;
     const heroTagline = document.getElementById('hero-tagline');
     const heroCta = document.getElementById('hero-cta');
     const heroName = document.getElementById('hero-name');
+    const heroNameSuffix = document.getElementById('hero-name-suffix');
     const contactSendEmail = document.getElementById('contact-send-email');
 
     if (heroGreeting) heroGreeting.textContent = translations.hero.greeting;
     if (heroTagline) heroTagline.textContent = translations.hero.tagline;
     if (heroCta) heroCta.textContent = translations.hero.cta;
     if (heroName) heroName.textContent = translations.footer.name;
+    if (heroNameSuffix) heroNameSuffix.textContent = translations.hero.name_suffix;
     if (contactSendEmail) contactSendEmail.textContent = translations.contact.sendEmail;
 
     // Update about section content
