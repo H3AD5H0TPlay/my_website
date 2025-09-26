@@ -1,12 +1,5 @@
 ---
-import { translations } from '../utils/translations';
-const menuItems = [
-  { href: '#about', text: translations.about.title },
-  { href: '#experience', text: translations.experience.title },
-  { href: '#skills', text: translations.skills.title },
-  { href: '#projects', text: translations.projects.title },
-  { href: '#contact', text: translations.contact.title }
-];
+// Mobile menu will be populated dynamically via JavaScript from the language store
 ---
 
 <div class="md:hidden">
@@ -40,24 +33,9 @@ const menuItems = [
         <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/20 to-transparent"></div>
         <div class="absolute -inset-[150%] bg-gradient-to-br from-cyber-red/5 via-transparent to-cyber-red/10 animate-slow-spin"></div>
         
-        <!-- Menu items -->
-        <ul class="relative z-10 w-full p-4">
-          {menuItems.map((item, index) => (
-            <li class="menu-list-item mb-6 last:mb-0">
-              <a
-                href={item.href}
-                class="block text-2xl font-cyber text-white hover:text-cyber-red transition-all duration-300 relative group opacity-0 translate-x-8"
-                style={`transition-delay: ${index * 100}ms;`}
-              >
-                <div class="px-6 py-3 relative group-hover:bg-black/20 rounded-xl transition-all duration-300">
-                  <span class="relative z-10 flex items-center">
-                    <span class="text-cyber-red mr-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0">&gt;</span>
-                    {item.text}
-                  </span>
-                </div>
-              </a>
-            </li>
-          ))}
+        <!-- Menu items - populated dynamically -->
+        <ul id="mobile-menu-items" class="relative z-10 w-full p-4">
+          <!-- Items will be populated via JavaScript -->
         </ul>
       </div>
     </div>
@@ -105,29 +83,88 @@ const menuItems = [
 </style>
 
 <script>
+  import { currentTranslations } from '../stores/languageStore';
+
   (function initMobileMenu() {
     const setup = () => {
       const menuToggle = document.getElementById('menu-toggle');
       const menuIcon = menuToggle?.querySelector('.menu-icon');
       const mobileMenu = document.getElementById('mobile-menu');
-  const menuLinks = mobileMenu?.querySelectorAll('a');
+      const menuItemsList = document.getElementById('mobile-menu-items');
 
-      if (!menuToggle || !mobileMenu) return; // Nothing to wire up
+      if (!menuToggle || !mobileMenu || !menuItemsList) return;
 
       let isAnimating = false;
+      let menuLinks: NodeListOf<HTMLAnchorElement> | null = null;
 
-      /** @param {boolean} visible */
+      // Generate menu items from current translations
+      function generateMenuItems(translations: any) {
+        if (!menuItemsList) return;
+
+        const menuItems = [
+          { href: '#about', key: 'about' },
+          { href: '#experience', key: 'experience' },
+          { href: '#skills', key: 'skills' },
+          { href: '#projects', key: 'projects' },
+          { href: '#contact', key: 'contact' }
+        ];
+
+        menuItemsList.innerHTML = '';
+
+        menuItems.forEach((item, index) => {
+          const li = document.createElement('li');
+          li.className = 'menu-list-item mb-6 last:mb-0';
+
+          const a = document.createElement('a');
+          a.href = item.href;
+          a.className = 'block text-2xl font-cyber text-white hover:text-cyber-red transition-all duration-300 relative group opacity-0 translate-x-8';
+          a.style.transitionDelay = `${index * 100}ms`;
+
+          const div = document.createElement('div');
+          div.className = 'px-6 py-3 relative group-hover:bg-black/20 rounded-xl transition-all duration-300';
+
+          const span = document.createElement('span');
+          span.className = 'relative z-10 flex items-center';
+
+          const arrow = document.createElement('span');
+          arrow.className = 'text-cyber-red mr-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0';
+          arrow.textContent = '>';
+
+          const text = document.createElement('span');
+          text.textContent = translations.nav?.[item.key] || translations[item.key]?.title || item.key;
+
+          span.appendChild(arrow);
+          span.appendChild(text);
+          div.appendChild(span);
+          a.appendChild(div);
+          li.appendChild(a);
+          menuItemsList.appendChild(li);
+        });
+
+        // Update menu links reference and setup click handlers
+        setupMenuLinks();
+      }
+
+      function setupMenuLinks() {
+        if (!mobileMenu) return;
+        const currentLinks = mobileMenu.querySelectorAll('a');
+        currentLinks.forEach(link => {
+          link.addEventListener('click', toggleMenu);
+        });
+      }      /** @param {boolean} visible */
       function showLinks() {
-        if (!menuLinks) return;
-        menuLinks.forEach((link) => {
+        const currentLinks = mobileMenu?.querySelectorAll('a');
+        if (!currentLinks) return;
+        currentLinks.forEach((link) => {
           link.classList.remove('opacity-0', 'translate-x-8');
           link.classList.add('opacity-100', 'translate-x-0');
         });
       }
 
       function hideLinks() {
-        if (!menuLinks) return;
-        menuLinks.forEach((link) => {
+        const currentLinks = mobileMenu?.querySelectorAll('a');
+        if (!currentLinks) return;
+        currentLinks.forEach((link) => {
           link.classList.add('opacity-0', 'translate-x-8');
           link.classList.remove('opacity-100', 'translate-x-0');
         });
@@ -145,7 +182,6 @@ const menuItems = [
             mobileMenu.classList.remove('translate-x-full');
             document.body.classList.add('overflow-hidden');
             menuToggle.setAttribute('aria-expanded', 'true');
-            // Ensure links become visible
             showLinks();
           }, 50);
         } else {
@@ -155,7 +191,6 @@ const menuItems = [
             menuIcon?.classList.remove('active');
           }, 300);
           menuToggle.setAttribute('aria-expanded', 'false');
-          // Hide links for next open
           hideLinks();
         }
 
@@ -164,10 +199,15 @@ const menuItems = [
         }, 500);
       }
 
-      menuToggle.addEventListener('click', toggleMenu);
-      menuLinks?.forEach(link => {
-        link.addEventListener('click', toggleMenu);
+      // Initialize menu items and subscribe to language changes
+      currentTranslations.subscribe((translations) => {
+        generateMenuItems(translations);
       });
+
+      // Generate initial menu items
+      generateMenuItems(currentTranslations.get());
+
+      menuToggle.addEventListener('click', toggleMenu);
 
       // Close on Escape for accessibility
       document.addEventListener('keydown', (e) => {

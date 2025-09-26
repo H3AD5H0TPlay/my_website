@@ -9,6 +9,9 @@ interface Props {
 }
 
 const { title, description, tags, link } = Astro.props;
+
+// Use English as default for SSR
+const defaultTranslations = translations.en;
 ---
 
 <div class="relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group">
@@ -33,10 +36,34 @@ const { title, description, tags, link } = Astro.props;
         rel="noopener noreferrer"
         class="inline-flex items-center group/link bg-cyber-black/40 px-4 py-2 rounded-lg border border-cyber-red/10 hover:border-cyber-red/30 transition-all duration-300 font-cyber hover:scale-105"
       >
-        <span class="text-white group-hover/link:text-cyber-red transition-colors">{translations.projects.viewProject}</span>
+        <span class="text-white group-hover/link:text-cyber-red transition-colors project-view-text">{defaultTranslations.projects.viewProject}</span>
         <span class="ml-2 transform transition-transform group-hover/link:translate-x-1 text-cyber-red">→</span>
       </a>
     )}
   </div>
 </div>
-</div>
+
+<script>
+  import { currentTranslations } from '../stores/languageStore';
+
+  // Update project card text when language changes
+  function updateProjectCards() {
+    const translations = currentTranslations.get();
+    const viewProjectElements = document.querySelectorAll('.project-view-text');
+    
+    viewProjectElements.forEach(el => {
+      if (el && translations.projects?.viewProject) {
+        el.textContent = translations.projects.viewProject;
+      }
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      currentTranslations.subscribe(updateProjectCards);
+    });
+  } else {
+    currentTranslations.subscribe(updateProjectCards);
+  }
+</script>

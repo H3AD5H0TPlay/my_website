@@ -1,7 +1,7 @@
 ---
 import MobileMenu from '../components/MobileMenu.astro';
 import LiquidGlassEffect from '../components/LiquidGlassEffect.astro';
-import { translations } from '../utils/translations';
+import LanguageSelector from '../components/LanguageSelector.astro';
 
 interface Props {
   title: string;
@@ -218,30 +218,12 @@ const { title, description = defaultDescription } = Astro.props;
             <span class="relative z-10">PV</span>
             <div class="absolute inset-0 bg-cyber-red/10 blur-lg"></div>
           </a>
-          <div class="hidden md:flex space-x-8 font-cyber">
-            <a href="#about" class="hover:text-cyber-red transition-colors group relative">
-              <span class="inline-block group-hover:animate-glitch relative z-10">About</span>
-              <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg"></div>
-            </a>
-            <a href="#experience" class="hover:text-cyber-red transition-colors group relative">
-              <span class="inline-block group-hover:animate-glitch relative z-10">Experience</span>
-              <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg"></div>
-            </a>
-            <a href="#skills" class="hover:text-cyber-red transition-colors group relative">
-              <span class="inline-block group-hover:animate-glitch relative z-10">Skills</span>
-              <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg"></div>
-            </a>
-            <a href="#projects" class="hover:text-cyber-red transition-colors group relative">
-              <span class="inline-block group-hover:animate-glitch relative z-10">Projects</span>
-              <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg"></div>
-            </a>
-            <a href="#contact" class="hover:text-cyber-red transition-colors group relative">
-              <span class="inline-block group-hover:animate-glitch relative z-10">Contact</span>
-              <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg"></div>
-            </a>
-          </div>
+          <!-- Desktop navigation - populated dynamically -->
+          <nav id="desktop-nav" class="hidden md:flex space-x-8 font-cyber">
+            <!-- Navigation items will be populated via JavaScript -->
+          </nav>
           <div class="flex items-center space-x-4">
-            <!-- Mobile menu trigger is fixed; component moved outside header to avoid stacking issues -->
+            <LanguageSelector />
           </div>
         </div>
       </div>
@@ -256,12 +238,68 @@ const { title, description = defaultDescription } = Astro.props;
     <footer class="bg-cyber-darker/50 backdrop-blur-sm border-t border-cyber-red/20 py-8 relative z-10">
       <div class="container mx-auto px-4 text-center font-cyber">
         <p class="text-cyber-red animate-flicker relative">
-          <span class="relative z-10">&copy; {new Date().getFullYear()} Peter Varga. <span class="text-white/80">All rights reserved.</span></span>
+          <span class="relative z-10">&copy; <span id="footer-year">2025</span> <span id="footer-name">Peter Varga</span>. <span class="text-white/80" id="footer-rights">All rights reserved.</span></span>
           <div class="absolute inset-0 bg-cyber-red/5 blur-lg"></div>
         </p>
       </div>
     </footer>
 
     <script src="../scripts/smooth-scroll.ts"></script>
+    
+    <script>
+      import { currentTranslations } from '../stores/languageStore';
+
+      // Populate desktop navigation
+      function updateDesktopNav(translations: any) {
+        const desktopNav = document.getElementById('desktop-nav');
+        if (!desktopNav) return;
+
+        const navItems = [
+          { href: '#about', key: 'about' },
+          { href: '#experience', key: 'experience' },
+          { href: '#skills', key: 'skills' },
+          { href: '#projects', key: 'projects' },
+          { href: '#contact', key: 'contact' }
+        ];
+
+        desktopNav.innerHTML = '';
+
+        navItems.forEach(item => {
+          const a = document.createElement('a');
+          a.href = item.href;
+          a.className = 'hover:text-cyber-red transition-colors group relative';
+
+          const span = document.createElement('span');
+          span.className = 'inline-block group-hover:animate-glitch relative z-10';
+          span.textContent = translations.nav?.[item.key] || translations[item.key]?.title || item.key;
+
+          const div = document.createElement('div');
+          div.className = 'absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/10 transition-colors duration-300 blur-lg';
+
+          a.appendChild(span);
+          a.appendChild(div);
+          desktopNav.appendChild(a);
+        });
+      }
+
+      // Update footer content
+      function updateFooter(translations: any) {
+        const footerYear = document.getElementById('footer-year');
+        const footerName = document.getElementById('footer-name');
+        const footerRights = document.getElementById('footer-rights');
+
+        if (footerYear) footerYear.textContent = translations.footer.year;
+        if (footerName) footerName.textContent = translations.footer.name;
+        if (footerRights) footerRights.textContent = translations.footer.allRights;
+      }
+
+      // Initialize and subscribe to language changes
+      document.addEventListener('DOMContentLoaded', () => {
+        currentTranslations.subscribe(updateDesktopNav);
+        currentTranslations.subscribe(updateFooter);
+        updateDesktopNav(currentTranslations.get());
+        updateFooter(currentTranslations.get());
+      });
+    </script>
   </body>
 </html>

@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { translations } from '../utils/translations';
+
+// Use English as default for SSR, JavaScript will handle dynamic updates
+const defaultTranslations = translations.en;
 ---
 
 <Layout title="Peter Varga - Software Developer">
@@ -15,20 +18,20 @@ import { translations } from '../utils/translations';
         <div class="absolute bottom-0 left-0 w-24 h-24 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
         <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
         <h1 class="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-cyber font-bold mb-6 animate-fade-in opacity-0" style="animation: fadeIn 1s ease-out forwards">
-          {translations.hero.greeting} <span class="text-cyber-red animate-glow relative">
-            Peter Varga
+          <span id="hero-greeting">{defaultTranslations.hero.greeting}</span> <span class="text-cyber-red animate-glow relative">
+            <span id="hero-name">Peter Varga</span>
             <div class="absolute inset-0 bg-cyber-red/20 blur-xl"></div>
           </span>
         </h1>
         <p class="text-lg xs:text-xl sm:text-2xl text-white/80 mb-8 animate-fade-in opacity-0 font-cyber" style="animation: fadeIn 1s ease-out 0.5s forwards">
-          {translations.hero.tagline}
+          <span id="hero-tagline">{defaultTranslations.hero.tagline}</span>
         </p>
         <a
           href="#contact"
           class="bg-cyber-red text-white px-6 xs:px-8 py-3 font-cyber font-medium hover:bg-cyber-red-bright transition-all duration-300 hover:scale-105 animate-fade-in opacity-0 border border-cyber-red-bright shadow-[0_0_15px_rgba(255,23,68,0.5)] inline-block relative overflow-hidden group"
           style="animation: fadeIn 1s ease-out 1s forwards"
         >
-          <span class="relative z-10">{translations.hero.cta}</span>
+          <span class="relative z-10" id="hero-cta">{defaultTranslations.hero.cta}</span>
           <div class="absolute inset-0 bg-gradient-to-r from-cyber-red-bright to-cyber-red opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="absolute inset-0 bg-cyber-red/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </a>
@@ -41,8 +44,8 @@ import { translations } from '../utils/translations';
     <div class="container mx-auto px-4">
       <div class="opacity-0 scroll-trigger">
         <SectionHeader
-          title={translations.about.title}
-          subtitle={translations.about.subtitle}
+          title={defaultTranslations.about.title}
+          subtitle={defaultTranslations.about.subtitle}
         />
         <div class="max-w-3xl mx-auto font-cyber">
           <div class="relative bg-black/80 backdrop-blur-sm mb-4 p-8 border border-cyber-red/20 rounded-xl group">
@@ -50,28 +53,22 @@ import { translations } from '../utils/translations';
             <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
             <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
             <div class="space-y-4 relative">
-              <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm">Welcome to my corner of the digital world! I'm a passionate software developer with 5+ years of experience in web development, specializing in building modern web applications. My expertise spans across the full stack, from crafting intuitive user interfaces to designing robust backend systems.</p>
-              <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm">Throughout my career, I've had the opportunity to work with diverse technologies and lead multiple successful projects. I thrive on solving complex technical challenges and continuously exploring new technologies to create innovative solutions that make a real impact.</p>
+              <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm" id="about-welcome">{defaultTranslations.about.welcome}</p>
+              <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm" id="about-career">{defaultTranslations.about.career}</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                 <div class="relative bg-black/80 backdrop-blur-sm p-6 rounded-xl group">
                   <div class="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
                   <div class="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
                   <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
                   <div class="cyber-border"></div>
-                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative">Experience</h3>
-                  <ul class="space-y-2 text-white/80">
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      5+ years in web development
-                    </li>
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      Full-stack expertise
-                    </li>
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      Team leadership experience
-                    </li>
+                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative" id="about-experience-title">{defaultTranslations.about.experienceTitle}</h3>
+                  <ul class="space-y-2 text-white/80" id="about-experience-items">
+                    {defaultTranslations.about.experienceItems.map((item) => (
+                      <li class="flex items-center gap-2">
+                        <span class="text-cyber-red/60">></span>
+                        <span class="experience-item-text">{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div class="relative bg-black/80 backdrop-blur-sm p-6 rounded-xl group">
@@ -79,25 +76,19 @@ import { translations } from '../utils/translations';
                   <div class="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
                   <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
                   <div class="cyber-border"></div>
-                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative">Education</h3>
-                  <ul class="space-y-2 text-white/80">
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      BSc in Computer Science
-                    </li>
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      Multiple certifications
-                    </li>
-                    <li class="flex items-center gap-2">
-                      <span class="text-cyber-red/60">></span>
-                      Continuous learner
-                    </li>
+                  <h3 class="text-cyber-red text-xl font-bold mb-3 relative" id="about-education-title">{defaultTranslations.about.educationTitle}</h3>
+                  <ul class="space-y-2 text-white/80" id="about-education-items">
+                    {defaultTranslations.about.educationItems.map((item) => (
+                      <li class="flex items-center gap-2">
+                        <span class="text-cyber-red/60">></span>
+                        <span class="education-item-text">{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
               <div class="mt-8 bg-cyber-black/60 p-6 rounded-xl border border-cyber-red/20 backdrop-blur-md shadow-[0_0_15px_rgba(255,23,68,0.1)]">
-                <h3 class="text-cyber-red text-xl font-bold mb-4 animate-glow">Technical Proficiencies</h3>
+                <h3 class="text-cyber-red text-xl font-bold mb-4 animate-glow" id="about-technical-title">{defaultTranslations.about.technicalTitle}</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {['TypeScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker'].map(skill => (
                     <div class="bg-cyber-black/40 px-4 py-3 rounded-lg border border-cyber-red/20 text-base hover:border-cyber-red/60 transition-all duration-300 transform hover:scale-[1.05] hover:shadow-[0_0_15px_rgba(255,23,68,0.2)] group">
@@ -118,37 +109,12 @@ import { translations } from '../utils/translations';
     <div class="container mx-auto px-4">
       <div class="opacity-0 scroll-trigger">
         <SectionHeader
-          title="Experience"
-          subtitle="My professional journey"
+          title={defaultTranslations.experience.title}
+          subtitle={defaultTranslations.experience.subtitle}
         />
         <div class="max-w-4xl mx-auto font-cyber">
-          <div class="space-y-8">
-            {[
-              {
-                title: "Lead Full Stack Developer",
-                company: "Future Tech Solutions",
-                period: "2023 - Present",
-                location: "Budapest, Hungary",
-                description: "Leading a team of developers in building enterprise-scale web applications. Implemented modern CI/CD practices, reducing deployment time by 60%. Architected and delivered multiple high-impact projects using cutting-edge technologies.",
-                tech: ["TypeScript", "Next.js", "Node.js", "AWS", "Docker", "Kubernetes"]
-              },
-              {
-                title: "Senior Software Engineer",
-                company: "Digital Innovations Hub",
-                period: "2021 - 2023",
-                location: "Budapest, Hungary",
-                description: "Spearheaded the development of a revolutionary fintech platform serving over 100,000 users. Optimized application performance and implemented robust security measures. Mentored junior developers and established best practices.",
-                tech: ["React", "Python", "Django", "PostgreSQL", "Redis", "AWS"]
-              },
-              {
-                title: "Full Stack Developer",
-                company: "Tech Ventures Inc",
-                period: "2019 - 2021",
-                location: "Remote",
-                description: "Developed and launched multiple successful web applications from concept to deployment. Collaborated with cross-functional teams to deliver feature-rich solutions. Improved system architecture and implemented performance optimizations.",
-                tech: ["Vue.js", "Node.js", "MongoDB", "Express", "Docker", "GCP"]
-              }
-            ].map((job, index) => (
+          <div class="space-y-8" id="experience-jobs">
+            {defaultTranslations.experience.jobs.map((job, index) => (
               <div class="relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group">
                 <div class="absolute top-0 right-0 w-20 h-20 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
                 <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
@@ -193,8 +159,8 @@ import { translations } from '../utils/translations';
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
         <SectionHeader
-          title={translations.skills.title}
-          subtitle={translations.skills.subtitle}
+          title={defaultTranslations.skills.title}
+          subtitle={defaultTranslations.skills.subtitle}
         />
       </div>
       <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 2xl:grid-cols-8 gap-4 xs:gap-6">
@@ -215,34 +181,21 @@ import { translations } from '../utils/translations';
   <section id="projects" class="py-20 japanese-pattern">
     <div class="container mx-auto px-4 max-w-[2400px] ultra:max-w-[8000px]">
       <SectionHeader
-        title={translations.projects.title}
-        subtitle={translations.projects.subtitle}
+        title={defaultTranslations.projects.title}
+        subtitle={defaultTranslations.projects.subtitle}
       />
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-6 4xl:grid-cols-8 5xl:grid-cols-12 gap-8">
-        <ProjectCard
-          title="E-commerce Platform"
-          description="A modern e-commerce platform built with Next.js and Stripe, featuring real-time inventory management and analytics."
-          tags={['Next.js', 'TypeScript', 'Stripe', 'Tailwind CSS']}
-          link="#"
-        />
-        <ProjectCard
-          title="Task Management App"
-          description="A collaborative task management application with real-time updates and team collaboration features."
-          tags={['React', 'Node.js', 'Socket.io', 'MongoDB']}
-          link="#"
-        />
-        <ProjectCard
-          title="AI Image Generator"
-          description="An advanced AI-powered image generation tool using stable diffusion and neural networks."
-          tags={['Python', 'PyTorch', 'FastAPI', 'React']}
-          link="#"
-        />
-        <ProjectCard
-          title="Blockchain Explorer"
-          description="A comprehensive blockchain explorer with real-time transaction tracking and analytics."
-          tags={['Web3.js', 'React', 'Node.js', 'GraphQL']}
-          link="#"
-        />
+      <div class="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-6 4xl:grid-cols-8 5xl:grid-cols-12 gap-8" id="projects-grid">
+        {defaultTranslations.projects.items.map((project, index) => (
+          <ProjectCard
+            title={project.title}
+            description={project.description}
+            tags={index === 0 ? ['Next.js', 'TypeScript', 'Stripe', 'Tailwind CSS'] : 
+                  index === 1 ? ['React', 'Node.js', 'Socket.io', 'MongoDB'] :
+                  index === 2 ? ['Python', 'PyTorch', 'FastAPI', 'React'] :
+                  ['Web3.js', 'React', 'Node.js', 'GraphQL']}
+            link="#"
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -251,8 +204,8 @@ import { translations } from '../utils/translations';
   <section id="contact" class="py-20 bg-cyber-darker/50 border-y border-cyber-red/20">
     <div class="container mx-auto px-4">
       <SectionHeader
-        title={translations.contact.title}
-        subtitle={translations.contact.subtitle}
+        title={defaultTranslations.contact.title}
+        subtitle={defaultTranslations.contact.subtitle}
       />
       <div class="max-w-lg mx-auto">
         <div class="bg-cyber-black p-8 border border-cyber-red/20 shadow-[0_0_30px_rgba(255,23,68,0.1)]">
@@ -261,7 +214,7 @@ import { translations } from '../utils/translations';
               href="mailto:contact@example.com"
               class="block text-center bg-cyber-red text-white p-4 font-cyber hover:bg-cyber-red-bright transition-all duration-300 border border-cyber-red-bright shadow-[0_0_15px_rgba(255,23,68,0.3)] relative overflow-hidden group"
             >
-              <span class="relative z-10">{translations.contact.sendEmail}</span>
+              <span class="relative z-10" id="contact-send-email">{defaultTranslations.contact.sendEmail}</span>
               <div class="absolute inset-0 bg-gradient-to-r from-cyber-red-bright to-cyber-red opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </a>
             <div class="flex justify-center space-x-6 xs:space-x-8 sm:space-x-12">
@@ -290,3 +243,219 @@ import { translations } from '../utils/translations';
     </div>
   </section>
 </Layout>
+
+<script>
+  import { currentTranslations } from '../stores/languageStore';
+
+  // Update page content when language changes
+  function updatePageContent(translations: any) {
+    // Hero section
+    const heroGreeting = document.getElementById('hero-greeting');
+    const heroTagline = document.getElementById('hero-tagline');
+    const heroCta = document.getElementById('hero-cta');
+    const heroName = document.getElementById('hero-name');
+    const contactSendEmail = document.getElementById('contact-send-email');
+
+    if (heroGreeting) heroGreeting.textContent = translations.hero.greeting;
+    if (heroTagline) heroTagline.textContent = translations.hero.tagline;
+    if (heroCta) heroCta.textContent = translations.hero.cta;
+    if (heroName) heroName.textContent = translations.footer.name;
+    if (contactSendEmail) contactSendEmail.textContent = translations.contact.sendEmail;
+
+    // Update about section content
+    updateAboutSection(translations);
+
+    // Update experience section
+    updateExperienceSection(translations);
+
+    // Update projects section
+    updateProjectsSection(translations);
+
+    // Update SectionHeader components by finding their h2 and p elements
+    updateSectionHeaders(translations);
+  }
+
+  function updateAboutSection(translations: any) {
+    const aboutWelcome = document.getElementById('about-welcome');
+    const aboutCareer = document.getElementById('about-career');
+    const aboutExperienceTitle = document.getElementById('about-experience-title');
+    const aboutEducationTitle = document.getElementById('about-education-title');
+    const aboutTechnicalTitle = document.getElementById('about-technical-title');
+
+    if (aboutWelcome) aboutWelcome.textContent = translations.about.welcome;
+    if (aboutCareer) aboutCareer.textContent = translations.about.career;
+    if (aboutExperienceTitle) aboutExperienceTitle.textContent = translations.about.experienceTitle;
+    if (aboutEducationTitle) aboutEducationTitle.textContent = translations.about.educationTitle;
+    if (aboutTechnicalTitle) aboutTechnicalTitle.textContent = translations.about.technicalTitle;
+
+    // Update experience items
+    const experienceItems = document.querySelectorAll('.experience-item-text');
+    experienceItems.forEach((item, index) => {
+      if (translations.about.experienceItems[index]) {
+        item.textContent = translations.about.experienceItems[index];
+      }
+    });
+
+    // Update education items
+    const educationItems = document.querySelectorAll('.education-item-text');
+    educationItems.forEach((item, index) => {
+      if (translations.about.educationItems[index]) {
+        item.textContent = translations.about.educationItems[index];
+      }
+    });
+  }
+
+  function updateExperienceSection(translations: any) {
+    const experienceContainer = document.getElementById('experience-jobs');
+    if (!experienceContainer || !translations.experience.jobs) return;
+
+    // Clear existing content
+    experienceContainer.innerHTML = '';
+
+    // Recreate job cards with translations
+    translations.experience.jobs.forEach((job: any) => {
+      const jobDiv = document.createElement('div');
+      jobDiv.className = 'relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group';
+      
+      jobDiv.innerHTML = `
+        <div class="absolute top-0 right-0 w-20 h-20 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
+        <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+        <div class="cyber-border"></div>
+        <div class="kanji-overlay"></div>
+        <div class="space-y-6 relative">
+          <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+            <div>
+              <h3 class="text-2xl font-bold text-cyber-red mb-2 group-hover:animate-glow">${job.title}</h3>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-white/90">
+                <span class="font-semibold">${job.company}</span>
+                <span class="hidden sm:block text-cyber-red/60">||</span>
+                <span class="text-white/70">${job.location}</span>
+              </div>
+            </div>
+            <span class="text-base text-cyber-red/90 bg-cyber-black/60 px-5 py-2 rounded-lg border border-cyber-red/30 shadow-[0_0_15px_rgba(255,23,68,0.15)] group-hover:shadow-[0_0_20px_rgba(255,23,68,0.3)] backdrop-blur-md">
+              <span class="text-cyber-red/60 mr-1">[</span>
+              ${job.period}
+              <span class="text-cyber-red/60 ml-1">]</span>
+            </span>
+          </div>
+          <p class="text-white/90 leading-relaxed text-lg backdrop-blur-sm">${job.description}</p>
+          <div class="flex flex-wrap gap-3 pt-3">
+            ${job.tech.map((tech: string) => `
+              <span class="text-sm text-white/80 bg-cyber-black/60 px-4 py-2 rounded-lg border border-cyber-red/20 hover:border-cyber-red/60 transition-all duration-300 transform hover:scale-[1.05] hover:shadow-[0_0_15px_rgba(255,23,68,0.2)] backdrop-blur-md group/tech">
+                <span class="text-cyber-red/60 group-hover/tech:text-cyber-red/90 mr-1 transition-colors">&lt;</span>
+                ${tech}
+                <span class="text-cyber-red/60 group-hover/tech:text-cyber-red/90 ml-1 transition-colors">/&gt;</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      experienceContainer.appendChild(jobDiv);
+    });
+  }
+
+  function updateProjectsSection(translations: any) {
+    const projectsGrid = document.getElementById('projects-grid');
+    if (!projectsGrid || !translations.projects.items) return;
+
+    // Clear existing projects
+    projectsGrid.innerHTML = '';
+
+    // Recreate project cards with translations
+    const techStacks = [
+      ['Next.js', 'TypeScript', 'Stripe', 'Tailwind CSS'],
+      ['React', 'Node.js', 'Socket.io', 'MongoDB'],
+      ['Python', 'PyTorch', 'FastAPI', 'React'],
+      ['Web3.js', 'React', 'Node.js', 'GraphQL']
+    ];
+
+    translations.projects.items.forEach((project: any, index: number) => {
+      const projectDiv = document.createElement('div');
+      projectDiv.className = 'relative bg-black/80 backdrop-blur-sm p-8 rounded-xl group';
+      
+      const techTags = techStacks[index].map(tech => 
+        `<span class="bg-cyber-black/40 text-white/90 px-3 py-1 rounded-md text-sm border border-cyber-red/10 hover:border-cyber-red/30 transition-colors font-cyber">${tech}</span>`
+      ).join('');
+
+      projectDiv.innerHTML = `
+        <div class="absolute top-0 right-0 w-20 h-20 border-t-[3px] border-r-[3px] border-cyber-red/40 rounded-tr-xl"></div>
+        <div class="absolute bottom-0 left-0 w-20 h-20 border-b-[3px] border-l-[3px] border-cyber-red/40 rounded-bl-xl"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/5 via-transparent to-transparent opacity-50"></div>
+        <div class="kanji-overlay"></div>
+        <div class="relative z-10">
+          <h3 class="text-xl font-cyber font-bold mb-3 text-cyber-red group-hover:text-cyber-red-bright transition-colors">${project.title}</h3>
+          <p class="text-white/80 mb-4 font-cyber">${project.description}</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            ${techTags}
+          </div>
+          <a
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center group/link bg-cyber-black/40 px-4 py-2 rounded-lg border border-cyber-red/10 hover:border-cyber-red/30 transition-all duration-300 font-cyber hover:scale-105"
+          >
+            <span class="text-white group-hover/link:text-cyber-red transition-colors project-view-text">${translations.projects.viewProject}</span>
+            <span class="ml-2 transform transition-transform group-hover/link:translate-x-1 text-cyber-red">→</span>
+          </a>
+        </div>
+      `;
+      
+      projectsGrid.appendChild(projectDiv);
+    });
+  }
+
+  function updateSectionHeaders(translations: any) {
+    // About section
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      const titleEl = aboutSection.querySelector('h2 span');
+      const subtitleEl = aboutSection.querySelector('p span');
+      if (titleEl) titleEl.textContent = translations.about.title;
+      if (subtitleEl) subtitleEl.textContent = translations.about.subtitle;
+    }
+
+    // Experience section
+    const experienceSection = document.getElementById('experience');
+    if (experienceSection) {
+      const titleEl = experienceSection.querySelector('h2 span');
+      const subtitleEl = experienceSection.querySelector('p span');
+      if (titleEl) titleEl.textContent = translations.experience.title;
+      if (subtitleEl) subtitleEl.textContent = translations.experience.subtitle;
+    }
+
+    // Skills section
+    const skillsSection = document.getElementById('skills');
+    if (skillsSection) {
+      const titleEl = skillsSection.querySelector('h2 span');
+      const subtitleEl = skillsSection.querySelector('p span');
+      if (titleEl) titleEl.textContent = translations.skills.title;
+      if (subtitleEl) subtitleEl.textContent = translations.skills.subtitle;
+    }
+
+    // Projects section
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      const titleEl = projectsSection.querySelector('h2 span');
+      const subtitleEl = projectsSection.querySelector('p span');
+      if (titleEl) titleEl.textContent = translations.projects.title;
+      if (subtitleEl) subtitleEl.textContent = translations.projects.subtitle;
+    }
+
+    // Contact section
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      const titleEl = contactSection.querySelector('h2 span');
+      const subtitleEl = contactSection.querySelector('p span');
+      if (titleEl) titleEl.textContent = translations.contact.title;
+      if (subtitleEl) subtitleEl.textContent = translations.contact.subtitle;
+    }
+  }
+
+  // Initialize and subscribe to language changes
+  document.addEventListener('DOMContentLoaded', () => {
+    currentTranslations.subscribe(updatePageContent);
+    updatePageContent(currentTranslations.get());
+  });
+</script>

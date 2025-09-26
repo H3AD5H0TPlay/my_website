@@ -1,0 +1,208 @@
+---
+import { languages, sortedLanguages } from '../utils/translations';
+---
+
+<div class="language-selector relative">
+  <button
+    id="language-toggle"
+    class="flex items-center space-x-2 px-3 py-2 text-cyber-red hover:text-cyber-red-bright transition-all duration-300 font-cyber text-sm border border-cyber-red/30 hover:border-cyber-red/60 rounded-lg bg-black/20 hover:bg-black/40 backdrop-blur-sm group relative"
+    aria-label="Select Language"
+    aria-expanded="false"
+    aria-haspopup="listbox"
+  >
+    <!-- Globe icon -->
+    <svg class="w-4 h-4 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+    </svg>
+    <!-- Current language display -->
+    <span id="current-language-display" class="min-w-[3rem] text-left">EN</span>
+    <!-- Dropdown arrow -->
+    <svg class="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" fill="currentColor" viewBox="0 0 12 12">
+      <path d="M2 4l4 4 4-4H2z"/>
+    </svg>
+    
+    <!-- Cyber glow effect -->
+    <div class="absolute inset-0 bg-cyber-red/0 group-hover:bg-cyber-red/5 rounded-lg transition-colors duration-300 blur-lg pointer-events-none"></div>
+  </button>
+
+  <!-- Dropdown menu -->
+  <div
+    id="language-dropdown"
+    class="absolute top-full right-0 mt-2 py-2 min-w-[8rem] bg-black/90 backdrop-blur-xl border border-cyber-red/30 rounded-xl shadow-2xl transform scale-95 opacity-0 translate-y-[-10px] transition-all duration-300 pointer-events-none z-50 overflow-hidden"
+    role="listbox"
+    aria-label="Language Options"
+  >
+    <!-- Cyber background effect -->
+    <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/10 via-transparent to-cyber-red/5"></div>
+    <div class="absolute -inset-[100%] bg-gradient-to-br from-cyber-red/5 via-transparent to-cyber-red/10 animate-slow-spin"></div>
+    
+    <!-- Language options -->
+    <div class="relative z-10">
+      {sortedLanguages.map((lang) => (
+        <button
+          class="language-option w-full px-4 py-3 text-left text-white hover:text-cyber-red hover:bg-black/40 transition-all duration-300 flex items-center justify-between group font-cyber text-sm"
+          data-lang={lang.code}
+          role="option"
+          aria-selected="false"
+        >
+          <span class="flex items-center space-x-3">
+            <span class="text-cyber-red/60 group-hover:text-cyber-red transition-colors duration-300 font-mono text-xs uppercase tracking-wider">{lang.code}</span>
+            <span class="group-hover:translate-x-1 transition-transform duration-300">{lang.nativeName}</span>
+          </span>
+          <!-- Selection indicator -->
+          <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 text-cyber-red transition-all duration-300 selected-indicator" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes slow-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-slow-spin {
+    animation: slow-spin 20s linear infinite;
+  }
+
+  /* Open state */
+  .language-selector.open #language-dropdown {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+
+  .language-selector.open #language-toggle svg:last-child {
+    transform: rotate(180deg);
+  }
+
+  /* Selected state */
+  .language-option.selected {
+    background-color: rgba(255, 23, 68, 0.1);
+    color: #ff1744;
+  }
+
+  .language-option.selected .selected-indicator {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { currentLanguage, setLanguage, type LanguageCode } from '../stores/languageStore';
+  import { languages } from '../utils/translations';
+
+  (function initLanguageSelector() {
+    const setup = () => {
+      const toggle = document.getElementById('language-toggle');
+      const dropdown = document.getElementById('language-dropdown');
+      const display = document.getElementById('current-language-display');
+      const selector = document.querySelector('.language-selector');
+      const options = document.querySelectorAll('.language-option');
+
+      if (!toggle || !dropdown || !display || !selector || !options.length) return;
+
+      let isOpen = false;
+
+      // Update display and selected state
+      function updateDisplay(langCode: LanguageCode) {
+        const lang = languages[langCode];
+        if (lang && display) {
+          display.textContent = lang.code.toUpperCase();
+        }
+
+        // Update selected state
+        options.forEach(option => {
+          const optionLang = option.getAttribute('data-lang');
+          if (optionLang === langCode) {
+            option.classList.add('selected');
+            option.setAttribute('aria-selected', 'true');
+          } else {
+            option.classList.remove('selected');
+            option.setAttribute('aria-selected', 'false');
+          }
+        });
+      }
+
+      // Open/close dropdown
+      function toggleDropdown() {
+        if (!selector || !toggle) return;
+        
+        isOpen = !isOpen;
+        selector.classList.toggle('open', isOpen);
+        toggle.setAttribute('aria-expanded', isOpen.toString());
+
+        if (isOpen) {
+          document.addEventListener('click', handleOutsideClick);
+          document.addEventListener('keydown', handleKeyDown);
+        } else {
+          document.removeEventListener('click', handleOutsideClick);
+          document.removeEventListener('keydown', handleKeyDown);
+        }
+      }
+
+      // Handle outside clicks
+      function handleOutsideClick(e: Event) {
+        if (selector && !selector.contains(e.target as Node)) {
+          closeDropdown();
+        }
+      }
+
+      // Handle keyboard navigation
+      function handleKeyDown(e: KeyboardEvent) {
+        if (e.key === 'Escape') {
+          closeDropdown();
+          toggle?.focus();
+        }
+      }
+
+      function closeDropdown() {
+        if (isOpen && selector && toggle) {
+          isOpen = false;
+          selector.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          document.removeEventListener('click', handleOutsideClick);
+          document.removeEventListener('keydown', handleKeyDown);
+        }
+      }
+
+      // Handle language selection
+      function selectLanguage(langCode: LanguageCode) {
+        setLanguage(langCode);
+        updateDisplay(langCode);
+        closeDropdown();
+      }
+
+      // Initialize
+      updateDisplay(currentLanguage.get());
+
+      // Listen to store changes
+      currentLanguage.subscribe(updateDisplay);
+
+      // Event listeners
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+      });
+
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const langCode = option.getAttribute('data-lang') as LanguageCode;
+          if (langCode && langCode in languages) {
+            selectLanguage(langCode);
+          }
+        });
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setup);
+    } else {
+      setup();
+    }
+  })();
+</script>
