@@ -1,4 +1,5 @@
 ---
+import LanguageSelector from './LanguageSelector.astro';
 // Mobile menu will be populated dynamically via JavaScript from the language store
 ---
 
@@ -27,6 +28,11 @@
     <div class="absolute inset-0 bg-gradient-to-br from-cyber-red/10 via-transparent to-cyber-red/5"></div>
     
   <div class="relative z-10 h-full flex flex-col pt-20 px-8">
+      <!-- Language selector for mobile -->
+      <div class="mb-6 relative z-20">
+        <LanguageSelector isMobile={true} />
+      </div>
+      
       <!-- Unified liquid glass menu panel -->
       <div class="relative w-full mt-8 rounded-2xl bg-black/40 backdrop-blur-md overflow-hidden">
         <!-- Liquid glass effects -->
@@ -143,6 +149,11 @@
 
         // Update menu links reference and setup click handlers
         setupMenuLinks();
+        
+        // If menu is currently open, show the new items immediately
+        if (mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+          showLinks();
+        }
       }
 
       function setupMenuLinks() {
@@ -183,6 +194,8 @@
             document.body.classList.add('overflow-hidden');
             menuToggle.setAttribute('aria-expanded', 'true');
             showLinks();
+            // Initialize mobile language selector when menu opens
+            initializeMobileLanguageSelector();
           }, 50);
         } else {
           mobileMenu.classList.add('translate-x-full');
@@ -197,6 +210,94 @@
         setTimeout(() => {
           isAnimating = false;
         }, 500);
+      }
+
+      // Initialize mobile language selector
+      function initializeMobileLanguageSelector() {
+        // Import language store functions
+        import('../stores/languageStore.js').then(({ currentLanguage, setLanguage }) => {
+          const mobileToggle = document.getElementById('language-toggle-mobile');
+          const mobileDropdown = document.getElementById('language-dropdown-mobile');
+          const mobileDisplay = document.getElementById('current-language-display-mobile');
+          const mobileSelector = mobileToggle?.closest('.language-selector');
+          const mobileOptions = mobileSelector?.querySelectorAll('.language-option');
+
+          console.log('Initializing mobile language selector...');
+          console.log('Mobile toggle:', mobileToggle);
+          console.log('Mobile dropdown:', mobileDropdown);
+          console.log('Mobile options:', mobileOptions);
+
+          if (!mobileToggle || !mobileDropdown || !mobileDisplay || !mobileSelector || !mobileOptions || mobileOptions.length === 0) {
+            console.log('Mobile language selector elements not found or incomplete');
+            return;
+          }
+
+          console.log('Mobile language selector elements found, setting up...');
+          
+          // Fix positioning for mobile context
+          mobileDropdown.style.position = 'absolute';
+          mobileDropdown.style.left = '0';
+          mobileDropdown.style.right = 'auto';
+          mobileDropdown.style.top = '100%';
+          
+          let isOpen = false;
+
+          // Simple click handler for mobile toggle
+          mobileToggle.addEventListener('click', (e) => {
+            console.log('Mobile language toggle clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle the dropdown
+            isOpen = !isOpen;
+            if (isOpen) {
+              mobileDropdown.style.opacity = '1';
+              mobileDropdown.style.transform = 'scale(1) translateY(0)';
+              mobileDropdown.style.pointerEvents = 'auto';
+              mobileSelector.classList.add('open');
+            } else {
+              mobileDropdown.style.opacity = '0';
+              mobileDropdown.style.transform = 'scale(0.95) translateY(-10px)';
+              mobileDropdown.style.pointerEvents = 'none';
+              mobileSelector.classList.remove('open');
+            }
+          });
+
+          // Add click handlers for mobile language options
+          mobileOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+              console.log('Mobile language option clicked!');
+              e.preventDefault();
+              e.stopPropagation();
+              const langCode = option.getAttribute('data-lang');
+              console.log('Selected language:', langCode);
+              
+              if (langCode) {
+                // Update language
+                setLanguage(langCode as 'en' | 'hu');
+                
+                // Update display
+                const lang = langCode.toUpperCase();
+                mobileDisplay.textContent = lang;
+                
+                // Close dropdown
+                isOpen = false;
+                mobileDropdown.style.opacity = '0';
+                mobileDropdown.style.transform = 'scale(0.95) translateY(-10px)';
+                mobileDropdown.style.pointerEvents = 'none';
+                mobileSelector.classList.remove('open');
+              }
+            });
+          });
+
+          // Initialize display
+          const currentLang = currentLanguage.get();
+          mobileDisplay.textContent = currentLang.toUpperCase();
+
+          console.log('Mobile language selector initialized successfully!');
+        }).catch(err => {
+          console.error('Failed to load language store:', err);
+        });
       }
 
       // Initialize menu items and subscribe to language changes

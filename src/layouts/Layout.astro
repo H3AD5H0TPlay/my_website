@@ -222,7 +222,8 @@ const { title, description = defaultDescription } = Astro.props;
           <nav id="desktop-nav" class="hidden md:flex space-x-8 font-cyber">
             <!-- Navigation items will be populated via JavaScript -->
           </nav>
-          <div class="flex items-center space-x-4">
+          <!-- Desktop-only language selector -->
+          <div class="hidden md:flex items-center space-x-4">
             <LanguageSelector />
           </div>
         </div>
@@ -301,5 +302,7 @@ const { title, description = defaultDescription } = Astro.props;
         updateFooter(currentTranslations.get());
       });
     </script>
+
+
   </body>
 </html>
